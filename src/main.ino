@@ -18,8 +18,6 @@
 #define PIN_ESP8266_MODE  3
 #define PIN_ESP8266_CH_PD 7
 
-SoftwareSerial mySerial(10, 11);
-
 ArduRPC_Serial *rpc_serial;
 
 SensorWifiModuleRemote *sensor_remote;

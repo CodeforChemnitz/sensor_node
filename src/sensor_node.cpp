@@ -129,6 +129,8 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
   }
   Serial.println("finish");
   sensor_remote->finish();
+  // ToDo: get status
+  delay(3000);
 }
 
 uint8_t *SensorNode::writeValuePrefix(uint8_t type)

@@ -6,7 +6,7 @@
 #define RPC_SERIAL_PORT Serial
 #define RPC_SERIAL_BAUD 9600
 
-#define RPC_NUM_HANDLERS 20
+#define RPC_NUM_HANDLERS  2
 #define RPC_NUM_FUNCTIONS 0
 
 #define PIN_NODE_MODE     4
@@ -20,10 +20,10 @@
 
 SoftwareSerial mySerial(10, 11);
 
-//ArduRPC rpc = ArduRPC(RPC_NUM_HANDLERS, RPC_NUM_FUNCTIONS);
-//ArduRPC_Serial rpc_serial = ArduRPC_Serial(RPC_SERIAL_PORT, rpc);
+ArduRPC *rpc;
+ArduRPC_Serial *rpc_serial;
 
-//ArduRPC_SensorNode sensor_node = ArduRPC_SensorNode();
+ArduRPC_SensorNode *rpc_sensor_node;
 
 ArduRPCRequest *rpc_request;
 ArduRPCRequest_Serial *h;
@@ -54,6 +54,10 @@ void setup() {
     sensor_node = new SensorNode();
     sensor_node->loadConfig();
   } else {
+    rpc = new ArduRPC(RPC_NUM_HANDLERS, RPC_NUM_FUNCTIONS);
+    rpc_serial = new ArduRPC_Serial(RPC_SERIAL_PORT, *rpc);
+
+    rpc_sensor_node = new ArduRPC_SensorNode(*rpc, "");
   }
   /*sensor_dht = new DHT(6, DHT22);
   sensor_dht->begin();*/
@@ -83,5 +87,13 @@ void loop() {
     digitalWrite(PIN_ESP8266_CH_PD, LOW);
     delay(5000);
   } else {
+    digitalWrite(PIN_ESP8266_SET, HIGH);
+    digitalWrite(PIN_ESP8266_MODE, HIGH);
+
+    digitalWrite(PIN_ESP8266_CH_PD, HIGH);
+    // Wait for bootloader
+    delay(250);
+    digitalWrite(PIN_ESP8266_SET, LOW);
+    rpc_serial->loop();
   }
 }

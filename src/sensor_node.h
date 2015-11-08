@@ -84,4 +84,12 @@ class SensorDHT : public BaseSensor
     DHT *dht;
 };
 
+class ArduRPC_SensorNode : public ArduRPCHandler
+{
+  public:
+    ArduRPC_SensorNode(ArduRPC &rpc, char *name);
+    uint8_t
+      call(uint8_t);
+};
+
 #endif

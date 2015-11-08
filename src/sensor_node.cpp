@@ -40,6 +40,7 @@ void SensorNode::loadConfig()
     sensor_type |= (uint8_t)EEPROM_read(pos);
     pos++;
     if(sensor_type == 0) {
+      this->sensors[i] = NULL;
       pos += 8;
       continue;
     }
@@ -247,5 +248,19 @@ uint8_t SensorWifiModuleRemote::submitValue(uint8_t *data, uint8_t length)
   this->_rpc->call(this->_handler_id, 0x13);
   Serial.println("end");
   return 0;
+}
+
+ArduRPC_SensorNode::ArduRPC_SensorNode(ArduRPC &rpc, char *name) : ArduRPCHandler()
+{
+  this->type = 0x9999;
+  this->registerSelf(rpc, name, (void *)this);
+}
+
+uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
+{
+  if (cmd_id == 0x10) {
+    return RPC_RETURN_SUCCESS;
+  }
+  return RPC_RETURN_COMMAND_NOT_FOUND;
 }
 

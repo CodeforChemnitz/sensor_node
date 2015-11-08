@@ -25,11 +25,11 @@ SoftwareSerial mySerial(10, 11);
 
 //ArduRPC_SensorNode sensor_node = ArduRPC_SensorNode();
 
-ArduRPCRequest rpc_request = ArduRPCRequest();
-ArduRPCRequest_Serial h = ArduRPCRequest_Serial(rpc_request, RPC_SERIAL_PORT);
-SensorWifiModuleRemote sensor_remote = SensorWifiModuleRemote(rpc_request, 0x00);
+ArduRPCRequest *rpc_request;
+ArduRPCRequest_Serial *h;
+SensorWifiModuleRemote *sensor_remote;
 
-SensorNode sensor_node = SensorNode();
+SensorNode *sensor_node;
 
 uint8_t sensor_node_mode = NODE_MODE_ACTIVE;
 
@@ -48,7 +48,11 @@ void setup() {
   }
 
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
-    sensor_node.loadConfig();
+    rpc_request = new ArduRPCRequest();
+    h = new ArduRPCRequest_Serial(*rpc_request, RPC_SERIAL_PORT);
+    sensor_remote = new SensorWifiModuleRemote(*rpc_request, 0x00);
+    sensor_node = new SensorNode();
+    sensor_node->loadConfig();
   } else {
   }
   /*sensor_dht = new DHT(6, DHT22);
@@ -64,7 +68,7 @@ void loop() {
   //rpc_serial.readData();
   //sensor_dht->readTemperature();
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
-    sensor_node.run();
+    sensor_node->run();
     digitalWrite(PIN_ESP8266_SET, HIGH);
     digitalWrite(PIN_ESP8266_MODE, HIGH);
 
@@ -75,7 +79,7 @@ void loop() {
     digitalWrite(PIN_ESP8266_SET, LOW);
     // Wait until boot
     delay(250);
-    sensor_node.submitValues(&sensor_remote);
+    sensor_node->submitValues(sensor_remote);
     digitalWrite(PIN_ESP8266_CH_PD, LOW);
     delay(5000);
   } else {

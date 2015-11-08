@@ -59,18 +59,9 @@ void setup() {
 
     rpc_sensor_node = new ArduRPC_SensorNode(*rpc, "");
   }
-  /*sensor_dht = new DHT(6, DHT22);
-  sensor_dht->begin();*/
-  //mySerial.begin(9600);
-  //rpc.connectHandler(&sensor_node, 0x10);
-  // put your setup code here, to run once:
-  Serial.println("foo");
 }
 
 void loop() {
-  //a->writeValue();
-  //rpc_serial.readData();
-  //sensor_dht->readTemperature();
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
     sensor_node->run();
     digitalWrite(PIN_ESP8266_SET, HIGH);

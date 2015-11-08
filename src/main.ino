@@ -20,13 +20,8 @@
 
 SoftwareSerial mySerial(10, 11);
 
-ArduRPC *rpc;
 ArduRPC_Serial *rpc_serial;
 
-ArduRPC_SensorNode *rpc_sensor_node;
-
-ArduRPCRequest *rpc_request;
-ArduRPCRequest_Serial *h;
 SensorWifiModuleRemote *sensor_remote;
 
 SensorNode *sensor_node;
@@ -34,6 +29,9 @@ SensorNode *sensor_node;
 uint8_t sensor_node_mode = NODE_MODE_ACTIVE;
 
 void setup() {
+  ArduRPC *rpc;
+  ArduRPCRequest *rpc_request;
+
   pinMode(PIN_NODE_MODE, INPUT);
 
   pinMode(PIN_ESP8266_SET, OUTPUT);
@@ -49,7 +47,7 @@ void setup() {
 
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
     rpc_request = new ArduRPCRequest();
-    h = new ArduRPCRequest_Serial(*rpc_request, RPC_SERIAL_PORT);
+    new ArduRPCRequest_Serial(*rpc_request, RPC_SERIAL_PORT);
     sensor_remote = new SensorWifiModuleRemote(*rpc_request, 0x00);
     sensor_node = new SensorNode();
     sensor_node->loadConfig();
@@ -57,7 +55,7 @@ void setup() {
     rpc = new ArduRPC(RPC_NUM_HANDLERS, RPC_NUM_FUNCTIONS);
     rpc_serial = new ArduRPC_Serial(RPC_SERIAL_PORT, *rpc);
 
-    rpc_sensor_node = new ArduRPC_SensorNode(*rpc, "");
+    new ArduRPC_SensorNode(*rpc, "");
   }
 }
 

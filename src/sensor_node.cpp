@@ -104,11 +104,24 @@ void SensorNode::run()
 
 void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
 {
-  uint8_t i;
+  uint8_t i, status;
   Serial.println("start");
   sensor_remote->start();
   Serial.println("getStatus");
-  sensor_remote->getStatus();
+  status = 0;
+  for(i = 0; i < 10; i++) {
+    status = sensor_remote->getStatus();
+    Serial.print("Status ");
+    Serial.println(status);
+    if(status == 2) {
+      break;
+    }
+    delay(1000);
+  }
+  if(status != 2) {
+    return;
+  }
+
   for(i = 0; i < this->value_count; i++) {
       Serial.print("submitValue");
       Serial.println(i);
@@ -189,12 +202,16 @@ SensorWifiModuleRemote::SensorWifiModuleRemote(ArduRPCRequest &rpc, uint8_t hand
 
 uint8_t SensorWifiModuleRemote::getStatus()
 {
+  uint8_t status = 0;
+
   this->_rpc->reset();
   Serial.println("call");
   //this->_rpc->writeRequest_uint8(i);
   this->_rpc->call(this->_handler_id, 0x12);
+  
+  status = this->_rpc->readResult_uint8();
   Serial.println("end");
-  return 0;
+  return status;
 }
 
 uint8_t SensorWifiModuleRemote::finish()

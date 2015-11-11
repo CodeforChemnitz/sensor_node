@@ -6,3 +6,7 @@ Session.vim
 .netrwhist
 *~
 
+# PlatformIO
+.pioenvs/
+.sconsign.dblite
+

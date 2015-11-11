@@ -161,42 +161,6 @@ void SensorNode::writeValue(uint8_t type, float value)
   this->value_count++;
 }
 
-BaseSensor::BaseSensor()
-{
-}
-
-SensorDHT::SensorDHT(uint8_t *options)
-{
-  this->dht = new DHT(options[0], DHT22);
-}
-
-
-void SensorDHT::start(SensorNode *sensor)
-{
-  this->dht->readTemperature();
-  this->dht->readHumidity();
-}
-
-void SensorDHT::run(SensorNode *sensor)
-{
-}
-
-void SensorDHT::finish(SensorNode *sensor)
-{
-  float value;
-  value = this->dht->readTemperature();
-  sensor->writeValue(
-    SENSOR_VALUE_TEMPERATURE,
-    value
-  );
-
-  value = this->dht->readHumidity();
-  sensor->writeValue(
-    SENSOR_VALUE_HUMIDITY,
-    value
-  );
-}
-
 SensorWifiModuleRemote::SensorWifiModuleRemote(ArduRPCRequest &rpc, uint8_t handler_id) : ArduRPCRequestHandler()
 {
   this->_rpc = &rpc;

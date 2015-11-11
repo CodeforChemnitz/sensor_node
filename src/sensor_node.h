@@ -78,7 +78,6 @@ class SensorDHT : public BaseSensor
     SensorDHT(uint8_t *);
     void
       finish(SensorNode *),
-      run(SensorNode *),
       start(SensorNode *);
   private:
     DHT *dht;

@@ -11,6 +11,9 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   uint8_t sensor_id;
   uint16_t eeprom_pos;
   uint8_t i, data;
+  char s[64] = {0};
+  uint8_t len;
+
 
   if (cmd_id == 0x09) {
     /* getMaxSensorCount() */
@@ -99,6 +102,37 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
       Serial.print(eeprom_pos);
       Serial.print(" ");
       Serial.println(data, HEX);
+      eeprom_pos++;
+    }
+    return RPC_RETURN_SUCCESS;
+  } else if (cmd_id == 0x21) {
+    /* getUUID() */
+  } else if (cmd_id == 0x22) {
+    /* getKey() */
+  } else if (cmd_id == 0x23) {
+    /* setCredentials() */
+
+    /* UUID */
+    len = this->_rpc->getParam_string(s, 64);
+
+    eeprom_pos = NODE_EEPROM_UUID_OFFSET;
+    EEPROM.update(NODE_EEPROM_UUID_OFFSET, len);
+    eeprom_pos++;
+
+    for(i = 0; i < len; i++) {
+      EEPROM.update(eeprom_pos, s[i]);
+      eeprom_pos++;
+    }
+
+    /* API Key */
+    len = this->_rpc->getParam_string(s, 64);
+
+    eeprom_pos = NODE_EEPROM_KEY_OFFSET;
+    EEPROM.update(NODE_EEPROM_KEY_OFFSET, len);
+    eeprom_pos++;
+
+    for(i = 0; i < len; i++) {
+      EEPROM.update(eeprom_pos, s[i]);
       eeprom_pos++;
     }
     return RPC_RETURN_SUCCESS;

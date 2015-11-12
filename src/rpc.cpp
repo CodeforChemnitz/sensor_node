@@ -20,6 +20,9 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   } else if (cmd_id == 0x10) {
     /* getSensorType() */
     sensor_id = this->_rpc->getParam_uint8();
+    if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
+      return 1;
+    }
 
     eeprom_pos = sensor_id;
     eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
@@ -37,6 +40,9 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   } else if (cmd_id == 0x11) {
     /* getSensorConfig() */
     sensor_id = this->_rpc->getParam_uint8();
+    if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
+      return 1;
+    }
 
     eeprom_pos = sensor_id;
     eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);

@@ -12,7 +12,12 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   uint16_t eeprom_pos;
   uint8_t i, data;
 
-  if (cmd_id == 0x10) {
+  if (cmd_id == 0x09) {
+    /* getMaxSensorCount() */
+    this->_rpc->writeResult_uint8(NODE_MAX_SENSOR_COUNT);
+
+    return RPC_RETURN_SUCCESS;
+  } else if (cmd_id == 0x10) {
     /* getSensorType() */
     sensor_id = this->_rpc->getParam_uint8();
 

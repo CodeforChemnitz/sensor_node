@@ -53,7 +53,7 @@ void setup() {
     rpc = new ArduRPC(RPC_NUM_HANDLERS, RPC_NUM_FUNCTIONS);
     rpc_serial = new ArduRPC_Serial(RPC_SERIAL_PORT, *rpc);
 
-    new ArduRPC_SensorNode(*rpc, "");
+    new ArduRPC_SensorNode(*rpc, "node");
   }
 }
 

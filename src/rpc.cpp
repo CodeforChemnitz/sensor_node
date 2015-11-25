@@ -83,13 +83,7 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
     i = NODE_EEPROM_SENSOR_TYPE_SIZE;
     while(i--) {
       data = this->_rpc->getParam_uint8();
-      // ToDo: remove debug print()
-      //EEPROM.update(eeprom_pos, data);
-      Serial.print(i);
-      Serial.print(" ");
-      Serial.print(eeprom_pos);
-      Serial.print(" ");
-      Serial.println(data, HEX);
+      EEPROM.update(eeprom_pos, data);
       eeprom_pos++;
     }
 
@@ -104,13 +98,7 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
     /* Write sensor options */
     while(i--) {
       data = this->_rpc->getParam_uint8();
-      // ToDo: remove debug print()
-      //EEPROM.update(eeprom_pos, data);
-      Serial.print(i);
-      Serial.print(" ");
-      Serial.print(eeprom_pos);
-      Serial.print(" ");
-      Serial.println(data, HEX);
+      EEPROM.update(eeprom_pos, data);
       eeprom_pos++;
     }
     return RPC_RETURN_SUCCESS;

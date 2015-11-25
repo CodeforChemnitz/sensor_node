@@ -54,9 +54,14 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
 
     this->_rpc->writeResult(RPC_ARRAY);
     this->_rpc->writeResult(RPC_UINT8);
-    this->_rpc->writeResult(NODE_EEPROM_SENSOR_CONFIG_SIZE);
 
-    i = NODE_EEPROM_SENSOR_CONFIG_SIZE;
+    i = EEPROM.read(eeprom_pos);
+    eeprom_pos++;
+    if (i > NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE) {
+      i = NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE;
+    }
+    this->_rpc->writeResult(i);
+
     while(i--) {
       data = EEPROM.read(eeprom_pos);
       this->_rpc->writeResult(data);
@@ -88,11 +93,15 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
       eeprom_pos++;
     }
 
-    /* Write sensor options */
+    /* Write sensor options length */
     i = this->_rpc->getParam_uint8();
-    if (i > NODE_EEPROM_SENSOR_CONFIG_SIZE) {
-      i = NODE_EEPROM_SENSOR_CONFIG_SIZE;
+    if (i > NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE) {
+      i = NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE;
     }
+    EEPROM.update(eeprom_pos, i);
+    eeprom_pos++;
+
+    /* Write sensor options */
     while(i--) {
       data = this->_rpc->getParam_uint8();
       // ToDo: remove debug print()

@@ -40,6 +40,7 @@ void setup() {
   RPC_SERIAL_PORT.begin(RPC_SERIAL_BAUD);
 
   if(digitalRead(PIN_NODE_MODE) == HIGH) {
+    NODE_DEBUG_PRINTLN("Mode set to config");
     sensor_node_mode = NODE_MODE_CONFIG;
   }
 
@@ -58,7 +59,9 @@ void setup() {
 }
 
 void loop() {
+  NODE_DEBUG_PRINTLN("loop()");
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
+    NODE_DEBUG_PRINTLN("active begin");
     sensor_node->run();
     digitalWrite(PIN_ESP8266_SET, HIGH);
     digitalWrite(PIN_ESP8266_MODE, HIGH);
@@ -73,6 +76,7 @@ void loop() {
     sensor_node->submitValues(sensor_remote);
     digitalWrite(PIN_ESP8266_CH_PD, LOW);
     delay(5000);
+    NODE_DEBUG_PRINTLN("active end");
   } else {
     digitalWrite(PIN_ESP8266_SET, HIGH);
     digitalWrite(PIN_ESP8266_MODE, HIGH);

@@ -90,19 +90,7 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
     return RPC_RETURN_SUCCESS;
   } else if (cmd_id == 0x21) {
     /* getUUID() */
-    eeprom_pos = NODE_EEPROM_UUID_OFFSET;
-    len = EEPROM.read(eeprom_pos);
-    eeprom_pos++;
-
-    if(len > 64) {
-      len = 64;
-    }
-
-    for(i = 0; i < len; i++) {
-      s[i] = EEPROM.read(eeprom_pos);
-      eeprom_pos++;
-    }
-
+    len = this->node->getUUID(&s[0], sizeof(s));
     this->_rpc->writeResult_string(s, len);
 
     return RPC_RETURN_SUCCESS;

@@ -72,6 +72,26 @@ uint16_t SensorNode::getSensorType(uint8_t sensor_id)
   return sensor_id;
 }
 
+uint8_t SensorNode::getUUID(char *uuid, uint8_t max_length)
+{
+  uint8_t i, length;
+  uint16_t eeprom_pos;
+
+  eeprom_pos = NODE_EEPROM_UUID_OFFSET;
+  length = EEPROM.read(eeprom_pos);
+  eeprom_pos++;
+
+  if(length > max_length) {
+    length = max_length;
+  }
+
+  for(i = 0; i < length; i++) {
+    uuid[i] = EEPROM.read(eeprom_pos);
+    eeprom_pos++;
+  }
+  return length;
+}
+
 void SensorNode::loadConfig()
 {
   uint8_t i, j;

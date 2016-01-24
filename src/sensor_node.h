@@ -40,10 +40,12 @@ class BaseSensor
   private:
 };
 
+class SensorNode;
+
 class SensorWifiModuleRemote : public ArduRPCRequestHandler
 {
   public:
-    SensorWifiModuleRemote(ArduRPCRequest &rpc, uint8_t handler_id);
+    SensorWifiModuleRemote(ArduRPCRequest &rpc, uint8_t handler_id, SensorNode *node);
 
     uint8_t
       finish(),
@@ -52,6 +54,7 @@ class SensorWifiModuleRemote : public ArduRPCRequestHandler
     uint8_t
       getStatus();
   private:
+    SensorNode *node;
 };
 
 class SensorNode

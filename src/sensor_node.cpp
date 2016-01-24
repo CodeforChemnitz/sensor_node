@@ -55,6 +55,23 @@ int8_t SensorNode::getSensorConfig(uint8_t sensor_id, uint8_t *result, uint8_t m
   return payload_length;
 }
 
+uint16_t SensorNode::getSensorType(uint8_t sensor_id)
+{
+  uint16_t eeprom_pos;
+  uint16_t sensor_type;
+
+  if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
+    return 1;
+  }
+
+  eeprom_pos = sensor_id;
+  eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
+  eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
+
+  EEPROM.get(eeprom_pos, sensor_id);
+  return sensor_id;
+}
+
 void SensorNode::loadConfig()
 {
   uint8_t i, j;

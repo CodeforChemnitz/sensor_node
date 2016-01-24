@@ -16,6 +16,7 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   uint8_t len;
   int8_t payload_length;
   uint8_t config_payload[NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE];
+  uint16_t sensor_type;
 
 
   if (cmd_id == 0x09) {
@@ -30,17 +31,8 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
       return 1;
     }
 
-    eeprom_pos = sensor_id;
-    eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
-    eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
-
-    i = NODE_EEPROM_SENSOR_TYPE_SIZE;
-    this->_rpc->writeResult(RPC_UINT16);
-    while(i--) {
-      data = EEPROM.read(eeprom_pos);
-      this->_rpc->writeResult(data);
-      eeprom_pos++;
-    }
+    sensor_type = this->node->getSensorType(sensor_id);
+    this->_rpc->writeResult_uint16(sensor_type);
 
     return RPC_RETURN_SUCCESS;
   } else if (cmd_id == 0x11) {

@@ -120,9 +120,12 @@ void SensorNode::loadConfig()
   BaseSensor *sensor = NULL;
   uint8_t config_payload[NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE];
   int8_t payload_length;
-
   for(i = 0; i < NODE_MAX_SENSOR_COUNT; i++) {
+    NODE_DEBUG_PRINT("Load sensor ");
+    NODE_DEBUG_PRINTLN(i);
     sensor_type = this->getSensorType(i);
+    NODE_DEBUG_PRINT("Sensor type ");
+    NODE_DEBUG_PRINTLN(sensor_type);
     if(sensor_type == 0) {
       this->sensors[i] = NULL;
       continue;

@@ -61,6 +61,7 @@ class SensorNode
     int8_t
       getSensorConfig(uint8_t, uint8_t*, uint8_t);
     uint8_t
+      getKey(char*, uint8_t),
       getUUID(char*, uint8_t);
     uint16_t
       getSensorType(uint8_t);

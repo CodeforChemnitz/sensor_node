@@ -61,7 +61,8 @@ void SensorNode::loadConfig()
   uint16_t sensor_type;
   int pos = NODE_EEPROM_BASIC_SENSOR_OFFSET;
   BaseSensor *sensor = NULL;
-  uint8_t sensor_options[8];
+  uint8_t config_payload[NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE];
+  int8_t payload_length;
 
   for(i = 0; i < NODE_MAX_SENSOR_COUNT; i++) {
     sensor_type = 0;
@@ -75,12 +76,13 @@ void SensorNode::loadConfig()
       pos += 8;
       continue;
     }
-    
-    for(j = 0; j < 8; j++) {
-      sensor_options[j] = EEPROM_read(pos);
-      pos++;
+
+    payload_length = this->getSensorConfig(i, &config_payload[0], sizeof(&config_payload));
+    if(payload_length < 0) {
+      continue;
     }
-    sensor = this->setupSensor(sensor_type, sensor_options);
+
+    sensor = this->setupSensor(sensor_type, config_payload);
     if (sensor != NULL) {
       this->sensors[i] = sensor;
     }

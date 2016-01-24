@@ -58,6 +58,8 @@ class SensorNode
 {
   public:
     SensorNode();
+    int8_t
+      getSensorConfig(uint8_t, uint8_t*, uint8_t);
     void
       loadConfig(),
       run(),
@@ -90,9 +92,11 @@ class SensorDHT : public BaseSensor
 class ArduRPC_SensorNode : public ArduRPCHandler
 {
   public:
-    ArduRPC_SensorNode(ArduRPC &rpc, char *name);
+    ArduRPC_SensorNode(ArduRPC &rpc, char *name, SensorNode*);
     uint8_t
       call(uint8_t);
+  private:
+    SensorNode *node;
 };
 
 #endif

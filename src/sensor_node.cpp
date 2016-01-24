@@ -24,6 +24,37 @@ BaseSensor *SensorNode::setupSensor(uint16_t type, uint8_t *options)
   return NULL;
 }
 
+int8_t SensorNode::getSensorConfig(uint8_t sensor_id, uint8_t *result, uint8_t max_length)
+{
+  uint8_t i;
+  uint8_t payload_length;
+  uint16_t eeprom_pos;
+  if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
+    return -1;
+  }
+
+  eeprom_pos = sensor_id;
+  eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
+  eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
+  eeprom_pos += NODE_EEPROM_SENSOR_TYPE_SIZE;
+
+  payload_length = EEPROM.read(eeprom_pos);
+  eeprom_pos++;
+  if (payload_length > NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE) {
+    payload_length = NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE;
+  }
+
+  if (payload_length > max_length) {
+    return -2;
+  }
+
+  for(i=0; i < payload_length; i++) {
+    result[i] = EEPROM.read(eeprom_pos);
+    eeprom_pos++;
+  }
+  return payload_length;
+}
+
 void SensorNode::loadConfig()
 {
   uint8_t i, j;

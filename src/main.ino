@@ -43,17 +43,17 @@ void setup() {
     sensor_node_mode = NODE_MODE_CONFIG;
   }
 
+  sensor_node = new SensorNode();
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
     rpc_request = new ArduRPCRequest();
     new ArduRPCRequest_Serial(*rpc_request, RPC_SERIAL_PORT);
     sensor_remote = new SensorWifiModuleRemote(*rpc_request, 0x00);
-    sensor_node = new SensorNode();
     sensor_node->loadConfig();
   } else {
     rpc = new ArduRPC(RPC_NUM_HANDLERS, RPC_NUM_FUNCTIONS);
     rpc_serial = new ArduRPC_Serial(RPC_SERIAL_PORT, *rpc);
 
-    new ArduRPC_SensorNode(*rpc, "node");
+    new ArduRPC_SensorNode(*rpc, "node", sensor_node);
   }
 }
 
@@ -84,3 +84,4 @@ void loop() {
     rpc_serial->loop();
   }
 }
+

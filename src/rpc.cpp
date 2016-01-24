@@ -1,9 +1,10 @@
 #include "sensor_node.h"
 
-ArduRPC_SensorNode::ArduRPC_SensorNode(ArduRPC &rpc, char *name) : ArduRPCHandler()
+ArduRPC_SensorNode::ArduRPC_SensorNode(ArduRPC &rpc, char *name, SensorNode *node) : ArduRPCHandler()
 {
   this->type = 0xff01;
   this->registerSelf(rpc, name, (void *)this);
+  this->node = node;
 }
 
 uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
@@ -13,6 +14,8 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   uint8_t i, data;
   char s[64] = {0};
   uint8_t len;
+  int8_t payload_length;
+  uint8_t config_payload[NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE];
 
 
   if (cmd_id == 0x09) {
@@ -43,29 +46,20 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   } else if (cmd_id == 0x11) {
     /* getSensorConfig() */
     sensor_id = this->_rpc->getParam_uint8();
-    if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
-      return 1;
-    }
 
-    eeprom_pos = sensor_id;
-    eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
-    eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
-    eeprom_pos += NODE_EEPROM_SENSOR_TYPE_SIZE;
+    payload_length = this->node->getSensorConfig(sensor_id, &config_payload[0], NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE);
+    // Return error code
+    if (payload_length < 0) {
+      return abs(payload_length);
+    }
 
     this->_rpc->writeResult(RPC_ARRAY);
     this->_rpc->writeResult(RPC_UINT8);
 
-    i = EEPROM.read(eeprom_pos);
-    eeprom_pos++;
-    if (i > NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE) {
-      i = NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE;
-    }
-    this->_rpc->writeResult(i);
+    this->_rpc->writeResult(payload_length);
 
-    while(i--) {
-      data = EEPROM.read(eeprom_pos);
-      this->_rpc->writeResult(data);
-      eeprom_pos++;
+    for(i=0; i < payload_length; i++) {
+      this->_rpc->writeResult(config_payload[i]);
     }
 
     return RPC_RETURN_SUCCESS;

@@ -82,15 +82,9 @@ void SensorNode::loadConfig()
   int8_t payload_length;
 
   for(i = 0; i < NODE_MAX_SENSOR_COUNT; i++) {
-    sensor_type = 0;
-    sensor_type = (uint8_t)EEPROM_read(pos);
-    pos++;
-    sensor_type <<= 8;
-    sensor_type |= (uint8_t)EEPROM_read(pos);
-    pos++;
+    sensor_type = this->getSensorType(i);
     if(sensor_type == 0) {
       this->sensors[i] = NULL;
-      pos += 8;
       continue;
     }
 

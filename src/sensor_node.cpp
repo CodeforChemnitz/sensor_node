@@ -190,14 +190,14 @@ void SensorNode::run()
 void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
 {
   uint8_t i, status;
-  Serial.println("start");
+  NODE_DEBUG_PRINTLN("start");
   sensor_remote->start();
-  Serial.println("getStatus");
+  NODE_DEBUG_PRINTLN("getStatus");
   status = 0;
   for(i = 0; i < 10; i++) {
     status = sensor_remote->getStatus();
-    Serial.print("Status ");
-    Serial.println(status);
+    NODE_DEBUG_PRINT("Status ");
+    NODE_DEBUG_PRINTLN(status);
     if(status == 2) {
       break;
     }
@@ -208,11 +208,11 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
   }
 
   for(i = 0; i < this->value_count; i++) {
-      Serial.print("submitValue");
-      Serial.println(i);
+      NODE_DEBUG_PRINT("submitValue ");
+      NODE_DEBUG_PRINTLN(i);
       sensor_remote->submitValue(&this->values[i * NODE_CACHE_VALUE_SIZE], NODE_CACHE_VALUE_SIZE);
   }
-  Serial.println("finish");
+  NODE_DEBUG_PRINTLN("finish");
   sensor_remote->finish();
   // ToDo: get status
   delay(3000);

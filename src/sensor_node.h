@@ -27,6 +27,17 @@
 #define SENSOR_VALUE_TEMPERATURE 1
 #define SENSOR_VALUE_HUMIDITY    2
 
+#ifdef NODE_DEBUG
+#define NODE_DEBUG_CMD(...) (__VA_ARGS__)
+#define NODE_DEBUG_PRINT(...) Serial.print(__VA_ARGS__)
+#define NODE_DEBUG_PRINTLN(...) Serial.println(__VA_ARGS__)
+#else /* defined NODE_DEBUG */
+#define NODE_DEBUG_CMD(...)
+#define NODE_DEBUG_PRINT(...)
+#define NODE_DEBUG_PRINTLN(...)
+#endif /* defined NODE_DEBUG */
+
+
 class SensorNode;
 
 class BaseSensor

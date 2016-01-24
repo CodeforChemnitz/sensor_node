@@ -131,7 +131,7 @@ void SensorNode::loadConfig()
       continue;
     }
 
-    payload_length = this->getSensorConfig(i, &config_payload[0], sizeof(&config_payload));
+    payload_length = this->getSensorConfig(i, &config_payload[0], sizeof(config_payload));
     if(payload_length < 0) {
       continue;
     }

@@ -126,8 +126,9 @@ void SensorNode::loadConfig()
     sensor_type = this->getSensorType(i);
     NODE_DEBUG_PRINT("Sensor type ");
     NODE_DEBUG_PRINTLN(sensor_type);
+
+    this->sensors[i] = NULL;
     if(sensor_type == 0) {
-      this->sensors[i] = NULL;
       continue;
     }
 
@@ -137,9 +138,7 @@ void SensorNode::loadConfig()
     }
 
     sensor = this->setupSensor(sensor_type, config_payload);
-    if (sensor != NULL) {
-      this->sensors[i] = sensor;
-    }
+    this->sensors[i] = sensor;
   }
 }
 

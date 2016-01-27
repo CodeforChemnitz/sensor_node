@@ -60,32 +60,49 @@ void setup() {
 }
 
 void loop() {
+  uint8_t i;
+  uint8_t esp8266_ready = 0;
+
   NODE_DEBUG_PRINTLN("loop()");
   if(sensor_node_mode == NODE_MODE_ACTIVE) {
     NODE_DEBUG_PRINTLN("active begin");
     sensor_node->run();
-    digitalWrite(PIN_ESP8266_SET, HIGH);
-    digitalWrite(PIN_ESP8266_MODE, HIGH);
-
     digitalWrite(PIN_ESP8266_CH_PD, HIGH);
-    // Wait for bootloader
-    delay(250);
-    digitalWrite(PIN_ESP8266_MODE, LOW);
-    digitalWrite(PIN_ESP8266_SET, LOW);
-    // Wait until boot
-    delay(250);
-    sensor_node->submitValues(sensor_remote);
+    for(i = 0; i < 2; i++) {
+      if(Serial.find("+READY")) {
+        Serial.println("+MODE run");
+        if(Serial.find("+OK")) {
+          esp8266_ready = 1;
+          break;
+        }
+      }
+    }
+    if(esp8266_ready) {
+      sensor_node->submitValues(sensor_remote);
+    }
     digitalWrite(PIN_ESP8266_CH_PD, LOW);
     delay(5000);
     NODE_DEBUG_PRINTLN("active end");
   } else {
-    digitalWrite(PIN_ESP8266_SET, HIGH);
-    digitalWrite(PIN_ESP8266_MODE, HIGH);
-
-    digitalWrite(PIN_ESP8266_CH_PD, HIGH);
-    // Wait for bootloader
-    delay(250);
-    digitalWrite(PIN_ESP8266_SET, LOW);
+    while(1) {
+      digitalWrite(PIN_ESP8266_CH_PD, HIGH);
+      Serial.setTimeout(3000);
+      for(i = 0; i < 2; i++) {
+        if(Serial.find("+READY")) {
+          Serial.println("+MODE cfg");
+          if(Serial.find("+OK")) {
+            esp8266_ready = 1;
+            break;
+          }
+        }
+      }
+      if(esp8266_ready) {
+        break;
+      }
+      // Restart ESP8266
+      digitalWrite(PIN_ESP8266_CH_PD, LOW);
+      delay(500);
+    }
     rpc_serial->loop();
   }
 }

@@ -216,8 +216,15 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
   }
   NODE_DEBUG_PRINTLN("finish");
   sensor_remote->finish();
-  // ToDo: get status
-  delay(3000);
+  for(i = 0; i < 10; i++) {
+    status = sensor_remote->getStatus();
+    NODE_DEBUG_PRINT("Status ");
+    NODE_DEBUG_PRINTLN(status);
+    if(status == 0) {
+      return;
+    }
+    delay(2000);
+  }
 }
 
 uint8_t *SensorNode::writeValuePrefix(uint8_t type)

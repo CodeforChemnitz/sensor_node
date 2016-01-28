@@ -27,6 +27,9 @@
 #define SENSOR_VALUE_TEMPERATURE 1
 #define SENSOR_VALUE_HUMIDITY    2
 
+// Enable debugging
+//#define NODE_DEBUG 1
+
 #ifdef NODE_DEBUG
 #define NODE_DEBUG_CMD(...) (__VA_ARGS__)
 #define NODE_DEBUG_PRINT(...) Serial.print(__VA_ARGS__)
@@ -36,7 +39,6 @@
 #define NODE_DEBUG_PRINT(...)
 #define NODE_DEBUG_PRINTLN(...)
 #endif /* defined NODE_DEBUG */
-
 
 class SensorNode;
 

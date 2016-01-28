@@ -66,12 +66,13 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
     eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
 
     /* Write sensor type */
-    i = NODE_EEPROM_SENSOR_TYPE_SIZE;
-    while(i--) {
-      data = this->_rpc->getParam_uint8();
-      EEPROM.update(eeprom_pos, data);
-      eeprom_pos++;
-    }
+    sensor_type = 0;
+    data = this->_rpc->getParam_uint8();
+    sensor_type <<8;
+    data = this->_rpc->getParam_uint8();
+    sensor_type |= data;
+    EEPROM.put(eeprom_pos, sensor_type);
+    eeprom_pos += 2;
 
     /* Write sensor options length */
     i = this->_rpc->getParam_uint8();

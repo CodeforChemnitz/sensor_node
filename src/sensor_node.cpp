@@ -68,8 +68,8 @@ uint16_t SensorNode::getSensorType(uint8_t sensor_id)
   eeprom_pos *= (NODE_EEPROM_SENSOR_TYPE_SIZE + NODE_EEPROM_SENSOR_CONFIG_SIZE);
   eeprom_pos += NODE_EEPROM_BASIC_SENSOR_OFFSET;
 
-  EEPROM.get(eeprom_pos, sensor_id);
-  return sensor_id;
+  EEPROM.get(eeprom_pos, sensor_type);
+  return sensor_type;
 }
 
 uint8_t SensorNode::getKey(char *key, uint8_t max_length)

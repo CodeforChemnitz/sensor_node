@@ -138,6 +138,13 @@ void SensorNode::loadConfig()
     }
 
     sensor = this->setupSensor(sensor_type, config_payload);
+#ifdef NODE_DEBUG
+    if(sensor == NULL) {
+      NODE_DEBUG_PRINTLN("Unable to load sensor");
+    } else {
+      NODE_DEBUG_PRINTLN("Found sensor");
+    }
+#endif
     this->sensors[i] = sensor;
   }
 }

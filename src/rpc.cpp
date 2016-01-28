@@ -58,6 +58,8 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
   } else if (cmd_id == 0x12) {
     /* setSensor() */
     sensor_id = this->_rpc->getParam_uint8();
+    NODE_DEBUG_PRINT("sensor_id ");
+    NODE_DEBUG_PRINTLN(sensor_id);
     if (sensor_id >= NODE_MAX_SENSOR_COUNT) {
       return 1;
     }
@@ -76,6 +78,8 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
 
     /* Write sensor options length */
     i = this->_rpc->getParam_uint8();
+    NODE_DEBUG_PRINT("payload_len ");
+    NODE_DEBUG_PRINTLN(i);
     if (i > NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE) {
       i = NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE;
     }
@@ -85,6 +89,10 @@ uint8_t ArduRPC_SensorNode::call(uint8_t cmd_id)
     /* Write sensor options */
     while(i--) {
       data = this->_rpc->getParam_uint8();
+      NODE_DEBUG_PRINT("data ");
+      NODE_DEBUG_PRINT(data);
+      NODE_DEBUG_PRINT(" ");
+      NODE_DEBUG_PRINTLN(eeprom_pos);
       EEPROM.update(eeprom_pos, data);
       eeprom_pos++;
     }

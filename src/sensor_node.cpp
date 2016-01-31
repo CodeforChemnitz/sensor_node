@@ -213,7 +213,6 @@ void SensorNode::resetValues()
 void SensorNode::run()
 {
   uint8_t i;
-  uint16_t sensor_type;
   BaseSensor *sensor;
 
   for(i = 0; i < NODE_MAX_SENSOR_COUNT; i++) {
@@ -230,23 +229,14 @@ void SensorNode::run()
     }
   }
 
-  int pos = NODE_EEPROM_BASIC_SENSOR_OFFSET;
-  
   this->resetValues();
   for(i = 0; i < NODE_MAX_SENSOR_COUNT; i++) {
     sensor = this->sensors[i];
     if (sensor == NULL) {
-      pos += 10;
+      continue;
     } else {
-      sensor_type = 0;
-      sensor_type = (uint8_t)EEPROM_read(pos);
-      pos++;
-      sensor_type <<= 8;
-      sensor_type |= (uint8_t)EEPROM_read(pos);
-      pos += 9;
-
       this->current_sensor_id = i;
-      this->current_sensor_type = sensor_type;
+      this->current_sensor_type = this->getSensorType(i);
       sensor->finish(this);
     }
   }
@@ -293,7 +283,7 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
 uint8_t *SensorNode::writeValuePrefix(uint8_t type)
 {
   uint8_t *data = &this->values[this->value_count * NODE_CACHE_VALUE_SIZE];
-  
+
   data[0] = this->current_sensor_id;
   data[1] = (((this->current_sensor_type) >> 8) & 0xff);
   data[2] = ((this->current_sensor_type) & 0xff);
@@ -316,4 +306,3 @@ void SensorNode::writeValue(uint8_t type, float value)
 
   this->value_count++;
 }
-

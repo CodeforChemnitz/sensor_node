@@ -1,17 +1,5 @@
 #include "sensor_node.h"
 
-uint8_t EEPROM_read(int pos)
-{
-  pos = pos - NODE_EEPROM_BASIC_SENSOR_OFFSET;
-  if (pos == 0)
-    return 0;
-  if (pos == 1)
-    return 1;
-  if (pos == 2)
-    return 6;
-  return 0;
-}
-
 SensorNode::SensorNode()
 {
 }

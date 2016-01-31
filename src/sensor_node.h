@@ -85,6 +85,7 @@ class SensorNode
     void
       delay(uint32_t),
       loadConfig(),
+      powerDown(uint32_t),
       run(),
       submitValues(SensorWifiModuleRemote *),
       writeValue(uint8_t, float);

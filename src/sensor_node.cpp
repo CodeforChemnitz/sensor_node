@@ -27,7 +27,7 @@ BaseSensor *SensorNode::setupSensor(uint16_t type, uint8_t *options)
 void SensorNode::delay(uint32_t ms)
 {
   if (ms == 0) {
-		return;
+    return;
   }
   uint32_t time_start = millis();
   do {
@@ -164,6 +164,46 @@ void SensorNode::loadConfig()
     this->sensors[i] = sensor;
   }
 }
+
+void SensorNode::powerDown(uint32_t ms)
+{
+  if (ms == 0) {
+    return;
+  }
+  uint32_t time_diff, time_elapsed = 0;
+  period_t period;
+
+  do {
+    time_diff = ms - time_elapsed;
+    if(time_diff >= 8000) {
+      period = SLEEP_8S;
+      time_elapsed += 8000;
+    } else if(time_diff >= 4000) {
+      period = SLEEP_4S;
+      time_elapsed += 4000;
+    } else if(time_diff >= 2000) {
+      period = SLEEP_2S;
+      time_elapsed += 2000;
+    } else if(time_diff >= 1000) {
+      period = SLEEP_1S;
+      time_elapsed += 1000;
+    } else if(time_diff >= 500) {
+      period = SLEEP_500MS;
+      time_elapsed += 500;
+    } else if(time_diff >= 250) {
+      period = SLEEP_250MS;
+      time_elapsed += 250;
+    } else if(time_diff >= 60) {
+      period = SLEEP_60MS;
+      time_elapsed += 60;
+    } else {
+      period = SLEEP_15MS;
+      time_elapsed += 15;
+   }
+    LowPower.powerDown(period, ADC_OFF, BOD_ON);
+  } while (time_elapsed < ms);
+}
+
 
 void SensorNode::resetValues()
 {

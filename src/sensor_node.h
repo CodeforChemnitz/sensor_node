@@ -2,6 +2,7 @@
 #define _SENSOR_NODE_H
 
 #include <avr/pgmspace.h>
+#include <LowPower.h>
 
 #include "ArduRPC.h"
 
@@ -82,6 +83,7 @@ class SensorNode
     uint16_t
       getSensorType(uint8_t);
     void
+      delay(uint32_t),
       loadConfig(),
       run(),
       submitValues(SensorWifiModuleRemote *),

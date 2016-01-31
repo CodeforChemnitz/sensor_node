@@ -24,6 +24,22 @@ BaseSensor *SensorNode::setupSensor(uint16_t type, uint8_t *options)
   return NULL;
 }
 
+void SensorNode::delay(uint32_t ms)
+{
+  if (ms == 0) {
+		return;
+  }
+  uint32_t time_start = millis();
+  do {
+    /*
+     * - Timer0 has to be active to use millis()
+     * - Timer0 fires every 1ms (16 MHz) or 2ms (8MHz)
+     * -> SLEEP_15MS is the lowest value available and should be good
+     */
+    LowPower.idle(SLEEP_15MS, ADC_ON, TIMER2_ON, TIMER1_ON, TIMER0_ON, SPI_ON, USART0_ON, TWI_ON);
+  } while (millis() - time_start < ms);
+}
+
 int8_t SensorNode::getSensorConfig(uint8_t sensor_id, uint8_t *result, uint8_t max_length)
 {
   uint8_t i;

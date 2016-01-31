@@ -266,7 +266,7 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
     if(status == 2) {
       break;
     }
-    delay(1000);
+    this->delay(1000);
   }
   if(status != 2) {
     return;
@@ -286,7 +286,7 @@ void SensorNode::submitValues(SensorWifiModuleRemote *sensor_remote)
     if(status == 0) {
       return;
     }
-    delay(2000);
+    this->delay(2000);
   }
 }
 

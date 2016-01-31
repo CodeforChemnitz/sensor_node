@@ -81,7 +81,9 @@ void loop() {
       sensor_node->submitValues(sensor_remote);
     }
     digitalWrite(PIN_ESP8266_CH_PD, LOW);
-    delay(5000);
+    // power down for 10s
+    // ToDo: change value to 60s
+    sensor_node->powerDown(10000);
     NODE_DEBUG_PRINTLN("active end");
   } else {
     while(1) {

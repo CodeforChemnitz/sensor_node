@@ -118,9 +118,8 @@ uint8_t SensorNode::getUUID(char *uuid, uint8_t max_length)
 
 void SensorNode::loadConfig()
 {
-  uint8_t i, j;
+  uint8_t i;
   uint16_t sensor_type;
-  int pos = NODE_EEPROM_BASIC_SENSOR_OFFSET;
   BaseSensor *sensor = NULL;
   uint8_t config_payload[NODE_EEPROM_SENSOR_CONFIG_PAYLOAD_SIZE];
   int8_t payload_length;
